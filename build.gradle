@@ -1,0 +1,22 @@
+plugins {
+    id 'java'
+    //id 'checkstyle'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories { 
+    mavenCentral() 
+}
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.jsoup/jsoup
+    implementation 'org.jsoup:jsoup:1.15.3'
+    testImplementation "junit:junit:4.13"
+}
+
+task run;
+run.doFirst {
+    println "To run the program:\njava -cp build/classes/java/main event.Runner"
+}

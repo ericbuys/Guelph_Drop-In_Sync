@@ -1,3 +1,5 @@
+package event;
+
 public class Event {
     private String eventName;
     private String date;
@@ -27,19 +29,19 @@ public class Event {
         return this.endTime;
     }
 
-    public String setEventName(String eventName) {
+    public void setEventName(String eventName) {
         this.eventName = eventName;
     }
 
-    public String setDate(String date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
-    public String setStartTime(String startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
-    public String setEndTime(String endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 }
