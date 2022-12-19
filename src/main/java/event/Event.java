@@ -2,12 +2,14 @@ package event;
 
 public class Event {
     private String eventName;
+    private String location;
     private String date;
     private String startTime;
     private String endTime;
 
-    public Event(String eventName, String date, String startTime, String endTime) {
+    public Event(String eventName, String location, String date, String startTime, String endTime) {
         this.eventName = eventName;
+        this.location = location;
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -15,6 +17,10 @@ public class Event {
 
     public String getEventName() {
         return this.eventName;
+    }
+
+    public String getLocation() {
+        return this.location;
     }
 
     public String getDate() {
@@ -31,6 +37,10 @@ public class Event {
 
     public void setEventName(String eventName) {
         this.eventName = eventName;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public void setDate(String date) {
