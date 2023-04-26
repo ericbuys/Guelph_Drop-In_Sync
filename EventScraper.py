@@ -36,28 +36,31 @@ class EventScraper:
         
     def scrapeURL(self):
         r = self.session.get(self.url)
-        r.html.render(wait=0.1, retries=8) #Fix: the num of retries shouldn't be hard-coded
+        r.html.render()
         scrapedEvents = []
 
-        displayTable = r.html.find("#AllEvents")[0]
-        eventBlocks = displayTable.find(".block.day")
+        try:
+            displayTable = r.html.find("#AllEvents")[0]
+            eventBlocks = displayTable.find(".block.day")
 
-        for eventBlock in eventBlocks:
-            events = pq(etree.fromstring(eventBlock.html))
-            eventList = events('.event')
-            day = self.DAY_INDEX[eventBlock.attrs['class'][2]]
+            for eventBlock in eventBlocks:
+                events = pq(etree.fromstring(eventBlock.html))
+                eventList = events('.event')
+                day = self.DAY_INDEX[eventBlock.attrs['class'][2]]
 
-            for event in eventList:
-                event = pq(event)
-                eventName = event('.eventName').text()
+                for event in eventList:
+                    event = pq(event)
+                    eventName = event('.eventName').text()
 
-                if(TARGET_EVENT == eventName):
-                    eventLocation = event('.eventLocation').text()
-                    startTime = event('.startTime').text()
-                    endTime = event('.endTime').text()
-                    
-                    newEvent = Event(eventName, startTime, endTime, eventLocation, day)
-                    scrapedEvents.append(newEvent)
+                    if(TARGET_EVENT == eventName):
+                        eventLocation = event('.eventLocation').text()
+                        startTime = event('.startTime').text()
+                        endTime = event('.endTime').text()
+                        
+                        newEvent = Event(eventName, startTime, endTime, eventLocation, day)
+                        scrapedEvents.append(newEvent)
+        except IndexError:
+            print("Failed to render html...., why?")
         
         return scrapedEvents
 
