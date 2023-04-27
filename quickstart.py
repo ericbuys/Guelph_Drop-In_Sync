@@ -1,6 +1,5 @@
 from __future__ import print_function
 
-import datetime
 import os.path
 
 from google.auth.transport.requests import Request
@@ -9,14 +8,16 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+import EventScraper
+from datetime import datetime, timedelta
+
 # If modifying these scopes, delete the file token.json.
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+SCOPES = 'https://www.googleapis.com/auth/calendar'
+TARGET_CALENDAR = 'Drop-In Rec'
+TIMEZONE = 'America/Toronto'
 
-
-def main():
-    """Shows basic usage of the Google Calendar API.
-    Prints the start and name of the next 10 events on the user's calendar.
-    """
+#Sets up the connection to the users Google Calendar
+def getCalendarSerivce():
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -35,29 +36,59 @@ def main():
         with open('token.json', 'w') as token:
             token.write(creds.to_json())
 
-    try:
-        service = build('calendar', 'v3', credentials=creds)
+    service = build('calendar', 'v3', credentials=creds)
+    return service
 
-        # Call the Calendar API
-        now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-        print('Getting the upcoming 10 events')
-        events_result = service.events().list(calendarId='primary', timeMin=now,
-                                              maxResults=10, singleEvents=True,
-                                              orderBy='startTime').execute()
-        events = events_result.get('items', [])
+#Returns the Drop-In Calendar ID if it has already been created, otherwise it returns None
+def fetchDropInCalendar():
+    service = getCalendarSerivce()
 
-        if not events:
-            print('No upcoming events found.')
-            return
+    #Getting list of Calendars
+    calendars_result = service.calendarList().list().execute()
+    calendars = calendars_result.get('items', [])
 
-        # Prints the start and name of the next 10 events
-        for event in events:
-            start = event['start'].get('dateTime', event['start'].get('date'))
-            print(start, event['summary'])
+    if not calendars:
+        print('No calendars found.')
+        return None
 
-    except HttpError as error:
-        print('An error occurred: %s' % error)
+    for calendar in calendars:
+        if(calendar['summary'] == TARGET_CALENDAR):
+            print('Found')
+            return calendar['id']
 
+#Creates a new Drop-In Rec Calendar and returns its ID    
+def createDropInCalendar():
+    service = getCalendarSerivce()
+
+    newCalendar = {
+        'summary': TARGET_CALENDAR
+    }
+
+    createdCalendar = service.calendars().insert(body=newCalendar).execute()
+    print("Created a new Drop-In Rec Calendar!")
+
+    return createdCalendar['id']
+
+def createCalendarEvent(event :EventScraper.Event):
+    body = {
+        "summary": event.eventName,
+        "location": event.location,
+        "start": {
+            'dateTime': '2015-05-28T09:00:00-07:00',
+            'timeZone': TIMEZONE,
+        }
+    }
+
+    pass
 
 if __name__ == '__main__':
-    main()
+    # calID = fetchDropInCalendar()
+    # if not calID:
+    #     calID = createDropInCalendar()
+    d = datetime.now().date()
+    # startTime = datetime(d.year, )
+    print(d)
+
+#    tomorrow = datetime(d.year, d.month, d.day, 10)+timedelta(days=1)
+#    start = tomorrow.isoformat()
+#    end = (tomorrow + timedelta(hours=1)).isoformat()
