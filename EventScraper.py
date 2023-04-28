@@ -12,7 +12,6 @@ class Event:
         self.eventName = eventName
         self.location = location
         self.day = day
-
         self.parseTime(dateRange, startTime, endTime)
     
     def __str__(self):
@@ -60,17 +59,43 @@ class EventScraper:
         self.url = url
         self.targetEvent = targetEvent
         self.session = HTMLSession()
+    
+    def setupSession(self, retryAmount):
+        count = 0
+        pageNotLoaded = True
+
+        self.r = self.session.get(self.url)
+
+        while(count < retryAmount and pageNotLoaded):
+            self.r.html.render()
+            
+            try:
+                displayTable = self.r.html.find("#AllEvents")[0]
+                pageNotLoaded = False   
+            except:
+                pass
+            
+            count += 1
+
+        if pageNotLoaded:
+            print("Unable to load dynamic page content")
+        else:
+            print("Dynamic Page Content loaded")
+        
+        return (not pageNotLoaded)
+            
+
+
         
     def scrapeURL(self):
-        r = self.session.get(self.url)
-        r.html.render()
+        dynamicPageContentLoaded = self.setupSession(retryAmount=50)
         scrapedEvents = []
 
-        try:
-            displayTable = r.html.find("#AllEvents")[0]
+        if dynamicPageContentLoaded:
+            displayTable = self.r.html.find("#AllEvents")[0]
             eventBlocks = displayTable.find(".block.day")
 
-            dateRange = r.html.find(".col-sm-3.col-md-5.col-xs-12")[0].text
+            dateRange = self.r.html.find(".col-sm-3.col-md-5.col-xs-12")[0].text
             dateRange = dateRange.split(" ")
             dateRange = ' '.join(dateRange[2:4])
 
@@ -90,8 +115,6 @@ class EventScraper:
                         
                         newEvent = Event(eventName, startTime, endTime, eventLocation, day, dateRange)
                         scrapedEvents.append(newEvent)
-        except Exception as e:
-            logger.exception(e)
         
         return scrapedEvents
 
@@ -102,5 +125,5 @@ if __name__ == "__main__":
     scraper = EventScraper(URL, TARGET_EVENT)
     scrapedEvents = scraper.scrapeURL()
     
-    # for event in scrapedEvents:
-    #     print(event)
+    for event in scrapedEvents:
+        print(event)
