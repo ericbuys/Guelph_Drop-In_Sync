@@ -1,14 +1,19 @@
 from requests_html import HTMLSession
 from pyquery import PyQuery as pq
 from lxml import etree
+from datetime import datetime, timedelta
+
+import logging
+
+logger = logging.Logger('catch_all')
 
 class Event:
-    def __init__(self, eventName, startTime, endTime, location, day):
+    def __init__(self, eventName, startTime, endTime, location, day, dateRange):
         self.eventName = eventName
-        self.startTime = startTime
-        self.endTime = endTime
         self.location = location
         self.day = day
+
+        self.parseTime(dateRange, startTime, endTime)
     
     def __str__(self):
         return ('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n'
@@ -18,15 +23,37 @@ class Event:
                 f'End Time: {self.endTime}\n'
                 f'Day: {self.day}')
 
+    def parseTime(self, dateRange, startTime, endTime):
+        calStartDate = datetime.strptime(dateRange, '%B %d')
+        today = datetime.today()
+
+        #Calculating the Event Start and End Time
+        eventStartTime = datetime.strptime(startTime[0], '%H:%M')
+        eventEndTime = datetime.strptime(endTime[0], '%H:%M')
+        if "PM" in startTime[1]:
+            eventStartTime += timedelta(hours=12)
+        if "PM" in endTime[1]:
+            eventEndTime += timedelta(hours=12)
+
+        #Getting start year if calStartDate and calEndDate bracket Dec 31
+        if today.month != calStartDate.month and calStartDate.month == 12:
+            today.year -= 1
+
+        self.startTime = datetime(today.year, calStartDate.month, calStartDate.day, eventStartTime.hour, eventStartTime.minute) + timedelta(days=self.day)
+        self.endTime = datetime(today.year, calStartDate.month, calStartDate.day, eventEndTime.hour, eventEndTime.minute) + timedelta(days=self.day)
+
+        self.startTime = self.startTime.isoformat()
+        self.endTime = self.endTime.isoformat()
+
 class EventScraper:
     DAY_INDEX = {
-        'day_1': 'Sunday',
-        'day_2': 'Monday',
-        'day_3': 'Tuesday',
-        'day_4': 'Wednesday',
-        'day_5': 'Thursday',
-        'day_6': 'Friday',
-        'day_7': 'Saturday'
+        'day_1': 0,
+        'day_2': 1,
+        'day_3': 2,
+        'day_4': 3,
+        'day_5': 4,
+        'day_6': 5,
+        'day_7': 6
     }
 
     def __init__(self, url, targetEvent):
@@ -43,6 +70,10 @@ class EventScraper:
             displayTable = r.html.find("#AllEvents")[0]
             eventBlocks = displayTable.find(".block.day")
 
+            dateRange = r.html.find(".col-sm-3.col-md-5.col-xs-12")[0].text
+            dateRange = dateRange.split(" ")
+            dateRange = ' '.join(dateRange[2:4])
+
             for eventBlock in eventBlocks:
                 events = pq(etree.fromstring(eventBlock.html))
                 eventList = events('.event')
@@ -52,15 +83,15 @@ class EventScraper:
                     event = pq(event)
                     eventName = event('.eventName').text()
 
-                    if(TARGET_EVENT == eventName):
+                    if(self.targetEvent == eventName):
                         eventLocation = event('.eventLocation').text()
-                        startTime = event('.startTime').text()
-                        endTime = event('.endTime').text()
+                        startTime = event('.startTime').text().split(' ')
+                        endTime = event('.endTime').text().split(' ')
                         
-                        newEvent = Event(eventName, startTime, endTime, eventLocation, day)
+                        newEvent = Event(eventName, startTime, endTime, eventLocation, day, dateRange)
                         scrapedEvents.append(newEvent)
-        except IndexError:
-            print("Failed to render html...., why?")
+        except Exception as e:
+            logger.exception(e)
         
         return scrapedEvents
 

@@ -6,13 +6,11 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 
 import EventScraper
-from datetime import datetime, timedelta
 
 # If modifying these scopes, delete the file token.json.
-SCOPES = 'https://www.googleapis.com/auth/calendar'
+SCOPES = ['https://www.googleapis.com/auth/calendar']
 TARGET_CALENDAR = 'Drop-In Rec'
 TIMEZONE = 'America/Toronto'
 
@@ -69,26 +67,42 @@ def createDropInCalendar():
 
     return createdCalendar['id']
 
-def createCalendarEvent(event :EventScraper.Event):
-    body = {
+#Gets the Drop-In Rec Calendar ID
+def getCalendarID():
+    calID = fetchDropInCalendar()
+    if not calID:
+        calID = createDropInCalendar()
+    
+    return calID
+
+#Adds a new Events to a Calendar specified by calID
+def createCalendarEvent(calID, event :EventScraper.Event):
+    service = getCalendarSerivce()
+
+    eventBody = {
         "summary": event.eventName,
         "location": event.location,
         "start": {
-            'dateTime': '2015-05-28T09:00:00-07:00',
+            'dateTime': event.startTime,
             'timeZone': TIMEZONE,
-        }
+        },
+        "end": {
+            'dateTime': event.endTime,
+            'timeZone': TIMEZONE,
+        },
     }
 
-    pass
+    newEvent = service.events().insert(calendarId=calID, body=eventBody).execute()
+
 
 if __name__ == '__main__':
-    # calID = fetchDropInCalendar()
-    # if not calID:
-    #     calID = createDropInCalendar()
-    d = datetime.now().date()
-    # startTime = datetime(d.year, )
-    print(d)
+    id = getCalendarID()
 
-#    tomorrow = datetime(d.year, d.month, d.day, 10)+timedelta(days=1)
-#    start = tomorrow.isoformat()
-#    end = (tomorrow + timedelta(hours=1)).isoformat()
+    URL = "https://fitandrec.gryphons.ca/sports-clubs/drop-in-rec"
+    TARGET_EVENT = "Badminton"
+
+    scraper = EventScraper.EventScraper(URL, TARGET_EVENT)
+    scrapedEvents = scraper.scrapeURL()
+    
+    for event in scrapedEvents:
+        createCalendarEvent(id, event)
