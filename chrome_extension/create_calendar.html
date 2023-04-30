@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Droppin</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="jquery-3.6.4.min.js"></script>
+    <script src="content.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="close-button"></div>
+    <div class="title">Create New Calendar</div>
+    <hr>
+    <form>
+        <label for="cal-name">Calendar Name:</label><br>
+        <input type="text" name="cal-name" id="cal-name"><br>
+        <label for="activities">Choose an Activity:</label>
+        <select name="activities" id="activities">
+            <option value="Volleyball">Volleyball</option>
+            <option value="Badminton">Badminton</option>
+            <option value="Soccer">Soccer</option>
+            <option value="Ultimate">Ultimate</option>
+            <option value="Rugby">Rugby</option>
+            <option value="Basketball">Basketball</option>
+        </select>
+    </form>
+    <div class="button-container">
+        <button id="create-calendar">Create</button>
+    </div>
+</body>
+</html>

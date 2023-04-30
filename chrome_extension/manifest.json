@@ -1,0 +1,11 @@
+{
+    "name": "Temp",
+    "version": "1.0",
+    "description": "temp description",
+    "manifest_version": 3,
+    "author": "Eric Buys",
+    "action":{
+        "default_popup": "index.html",
+        "default_title": "wehbk"
+    }
+}

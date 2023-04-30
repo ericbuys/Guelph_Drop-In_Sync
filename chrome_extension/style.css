@@ -1,0 +1,50 @@
+* {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body {
+    width: 400px;
+}
+
+.title {
+    font-size: 30px;
+    text-align: center;
+    padding-top: 5px;
+}
+
+hr {
+    border: 1px solid rgba(0, 0, 0, 0.137);
+    margin: 0;
+}
+
+.list-container {
+    padding: 10px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;   
+}
+
+.close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2px 6px;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.close-button::after {
+    content: "\2715";
+    width: 10px;
+    height: 10px;
+    font-size: 20px;
+    font-weight: 600; 
+    color: rgba(0, 0, 0, 0.562);
+}
+
+.close-button:hover {
+    background-color: rgba(0, 0, 0, 0.082);
+}
+
