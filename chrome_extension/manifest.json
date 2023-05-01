@@ -5,7 +5,10 @@
     "manifest_version": 3,
     "author": "Eric Buys",
     "action":{
-        "default_popup": "index.html",
+        "default_popup": "create_calendar.html",
         "default_title": "wehbk"
-    }
+    },
+    "permissions": [
+        "storage"
+    ]
 }

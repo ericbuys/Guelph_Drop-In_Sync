@@ -3,8 +3,8 @@
 ## Project Description
 Add activites from the Drop-In Rec Calendar at the Univeristy of Guelph to your Google Calendar through a Google Extension so that they are easy and convenient to view.
 
-## Bugs
-- The page sometimes doesn't render (r.html.render())
+## Improvements
+- Store the Activitiy List using chrome.storage.local
 
 ## References
 * [Drop-In Rec Calendar](https://fitandrec.gryphons.ca/sports-clubs/drop-in-rec)

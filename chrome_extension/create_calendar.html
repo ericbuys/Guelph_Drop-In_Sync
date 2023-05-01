@@ -9,24 +9,30 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="close-button"></div>
-    <div class="title">Create New Calendar</div>
-    <hr>
-    <form>
-        <label for="cal-name">Calendar Name:</label><br>
-        <input type="text" name="cal-name" id="cal-name"><br>
-        <label for="activities">Choose an Activity:</label>
-        <select name="activities" id="activities">
-            <option value="Volleyball">Volleyball</option>
-            <option value="Badminton">Badminton</option>
-            <option value="Soccer">Soccer</option>
-            <option value="Ultimate">Ultimate</option>
-            <option value="Rugby">Rugby</option>
-            <option value="Basketball">Basketball</option>
-        </select>
+    <div class="back-button-container">
+        <div class="back button"></div>
+    </div>
+    <div class="title-container">
+        <div class="title">Create Calendar</div>
+        <!-- <hr> -->
+    </div>
+    <form class="form">
+        <div class="form-sub-container">
+            <div class="label-container">
+                <label for="cal-name">Name</label>
+            </div>
+            <input class="form-control" type="text" name="cal-name" id="cal-name" placeholder="Drop-In Rec">
+        </div>
+        <div class="form-sub-container">
+            <div class="label-container">
+                <label for="activities">Activities</label>
+            </div>
+            <input class="form-control" type="text" name="activities" id="activity-search" placeholder="Search">
+            <div class="activity-container inactive"></div>
+        </div>
     </form>
     <div class="button-container">
-        <button id="create-calendar">Create</button>
+        <button class="btn" id="create-calendar">Create</button>
     </div>
 </body>
 </html>
