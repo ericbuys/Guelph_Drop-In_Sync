@@ -38,7 +38,7 @@ $(document).ready(function() {
     });
 
     $(document).on("click", function (event) {
-        if ($('.activity-container').length && $('.activity-container').hasClass('active') && $(event.target).closest("#activity-search").length === 0) {
+        if ($('.activity-container').length && $('.activity-container').hasClass('active') && ($(event.target).closest("#activity-search").length === 0 && $(event.target).closest(".activity-container").length === 0)) {
             $('.activity-container').toggleClass('inactive')
             $('.activity-container').toggleClass('active')
         }
