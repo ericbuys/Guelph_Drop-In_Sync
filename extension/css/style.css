@@ -21,7 +21,7 @@ body {
 }
 
 .back-arrow {
-    background-image: url('../back-arrow.svg');
+    background-image: url('../assets/back-arrow.svg');
     background-size: var(--back-arrow-size) var(--back-arrow-size);
     width: var(--back-arrow-size);
     height: var(--back-arrow-size);
@@ -37,6 +37,12 @@ body {
     background-color: var(--uog-red);
     color: white;
     margin: 5px;
+}
+
+.btn.primary.remove-btn {
+    margin: 0px;
+    padding: 1px 3px;
+    font-size: 12px;
 }
 
 .btn.primary:hover {
@@ -74,6 +80,10 @@ form.container {
     padding: 0;
 }
 
+.selected-activity-list {
+    padding: 0;
+}
+
 .activity-container-search {
     width: 100%;
 }
@@ -85,4 +95,43 @@ form.container {
 
 .show {
     display: block;
+}
+
+.list-group {
+    padding: 0;
+}
+
+.list-group-item:nth-child(even) {
+    background: rgb(241, 241, 241);
+}
+
+.added.list-group-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.added.list-group-item.activity-name {
+    margin: 0;
+}
+
+.added.list-group-item:nth-child(even):hover {
+    background-color: rgb(239, 239, 239);
+}
+
+.added.list-group-item:nth-child(odd):hover {
+    background-color: rgb(249, 249, 249);
+}
+
+.searchable.list-group-item:hover {
+    background-color: var(--uog-red);
+    color: white;
+}
+
+.searchable.list-group-item:active {
+    background-color: var(--uog-red-dark);
+    color: white;
+}
+
+.remove-btn {
+    max-height: 24px;
 }

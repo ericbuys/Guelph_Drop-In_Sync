@@ -1,3 +1,7 @@
+function addActivity(activityName) {
+    return '<div class="list-group-item added"> <div class="activity-name">' + activityName + '</div></div>\n'
+}
+
 $(document).ready(function() {
     $('.btn-close').css('translate', function() {
         let btnHeight = $(this).outerHeight()
@@ -38,7 +42,7 @@ $(document).ready(function() {
             let i = 0;
             
             $.each(activities, function() {
-                activityArray.push('<li class="list-group-item">' + activities[i].name + '</li>\n');
+                activityArray.push('<div class="list-group-item searchable">' + activities[i].name + '</div>\n');
                 i += 1;
             })
             
@@ -50,18 +54,43 @@ $(document).ready(function() {
         let opened = $('.activity-container').hasClass('show')
         let clickLoc = $(event.target)
         
-        console.log(opened)
         if(opened === true && !clickLoc.hasClass('activity-container-search')) {
-            console.log(clickLoc)
             $('.activity-container').toggleClass('show')
         }
     });
 
     //Searching
-    $("#activities").on("keyup", function() {
+    $(document).on("keyup", '#activities' ,function() {
         var value = $(this).val().toLowerCase();
-        $(".activity-container li").filter(function() {
+        $(".activity-container div").filter(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
     });
+
+    $(document).on('click', '.list-group-item.searchable', function() {
+        let newActivity = addActivity($(this).text())
+        $(newActivity).appendTo("#selected-activities")
+        $(this).remove()
+    })
+
+    $(document).on('mouseenter', '#selected-activities > .list-group-item' , function() {
+        $('<button type="button" class="btn primary remove-btn">Remove</button>').appendTo($(this))
+    })
+
+    $(document).on('mouseleave', '#selected-activities > .list-group-item' , function() {
+        $(this).children('button').remove()
+    })
+
+    $(document).on('click', '.remove-btn', function() {
+        let sibling = $(this).siblings()
+        let parent = $(this).parent()
+        
+        $(this).remove()
+        $(sibling).removeClass('added activity-name')
+        $(sibling).addClass('list-group-item searchable')
+        $(sibling).appendTo($('.activity-container'))
+        $(parent).remove()
+        // $(this)remove)
+    })
+
 })
