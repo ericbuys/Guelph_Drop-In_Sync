@@ -1,0 +1,88 @@
+:root {
+    --uog-red: #c20430;
+    --uog-red-dark: #b6052e;
+    --uog-red-darker: #a30429;
+    --uog-yellow: #ffc72a;
+    --back-arrow-size: 30px;
+    /* --btn-colour: rgba(0, 0, 0, 0.562);
+    --btn-colour-hover: rgba(0, 0, 0, 0.082); */
+}  
+
+body {
+    width: 400px;
+}
+
+.title {
+    background-color: var(--uog-yellow);
+}
+
+.title-text {
+    padding: 5px 0px;
+}
+
+.back-arrow {
+    background-image: url('../back-arrow.svg');
+    background-size: var(--back-arrow-size) var(--back-arrow-size);
+    width: var(--back-arrow-size);
+    height: var(--back-arrow-size);
+    left: 0;
+}
+
+.btn-close {
+    position:absolute;
+    right: 0;
+}
+
+.btn.primary {
+    background-color: var(--uog-red);
+    color: white;
+    margin: 5px;
+}
+
+.btn.primary:hover {
+    background-color: var(--uog-red-dark);
+}
+
+.btn.primary:active {
+    background-color: var(--uog-red-darker);
+    color: white;
+}
+
+form.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5px;
+}
+
+.label-container {
+    display: flex;
+    justify-content: right;
+    align-self: center;
+}
+
+.form-row {
+    margin: 5px 0px;
+}
+
+.activity-container {
+    display: none;
+    max-height: 225px;
+}
+
+.search-input {
+    padding: 0;
+}
+
+.activity-container-search {
+    width: 100%;
+}
+
+.activities-row {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.show {
+    display: block;
+}

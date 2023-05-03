@@ -3,10 +3,6 @@ from pyquery import PyQuery as pq
 from lxml import etree
 from datetime import datetime, timedelta
 
-import logging
-
-logger = logging.Logger('catch_all')
-
 class Event:
     def __init__(self, eventName, startTime, endTime, location, day, dateRange):
         self.eventName = eventName
@@ -84,9 +80,6 @@ class EventScraper:
         
         return (not pageNotLoaded)
             
-
-
-        
     def scrapeURL(self):
         dynamicPageContentLoaded = self.setupSession(retryAmount=50)
         scrapedEvents = []
