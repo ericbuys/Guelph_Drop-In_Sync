@@ -2,9 +2,12 @@
     "name": "DropInSync",
     "version": "1.0",
     "description": "Syncs the Fit & Rec Drop-In Calendar by Activity with your Google Calendar",
-    "manifest_version": 3,
     "author": "Eric Buys",
     "action":{
-        "default_popup": "html/index.html"
-    }
+        "default_popup": "./html/index.html"
+    },
+    "permissions": [
+        "storage"
+    ],
+    "manifest_version": 3
 }

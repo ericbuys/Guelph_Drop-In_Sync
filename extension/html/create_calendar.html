@@ -10,17 +10,17 @@
         <script src="../js/script.js"></script>
     </head>
     <body>
-        <button type="button" class="btn-close back-arrow" aria-label="Close"></button>
+        <button type="button" class="btn-close back-arrow" aria-label="Back"></button>
         <button type="button" class="btn-close close" aria-label="Close"></button>
         <div class="container text-center title">
             <h1 class="title-text my-auto">Create New Calendar</h1>
         </div>
-        <form class="container">
+        <form class="container needs-validation was-validated" novalidate>
             <div class="row form-row">
                 <div class="label-container col-3">
                     <label for="cal-name"><b>Name</b></label>
                 </div>
-                <input class="col-8" type="text" name="cal-name" id="cal-name" placeholder="Drop-In Rec">
+                <input class="col-8" type="text" name="cal-name" id="cal-name" placeholder="Calendar Name">
             </div>
             <div class="row form-row activities-row">
                 <div class="label-container col-3">
@@ -44,31 +44,11 @@
             </div>
             <div class="row form-row activities-row">
                 <div class="list-group overflow-auto" id="selected-activities"></div>
-
+            </div>
+            <div class="text-center">
+                <button type="submit" id="create-calendar" class="btn btn-sm primary">Create</button>
             </div>
         </form>
-
-
-        
-  
-        <!-- <form class="form">
-            <div class="form-sub-container">
-                <div class="label-container">
-                    <label for="cal-name">Name</label>
-                </div>
-                <input class="form-control" type="text" name="cal-name" id="cal-name" placeholder="Drop-In Rec">
-            </div>
-            <div class="form-sub-container">
-                <div class="label-container">
-                    <label for="activities">Activities</label>
-                </div>
-                <input class="form-control" type="text" name="activities" id="activity-search" placeholder="Search">
-                <div class="activity-container inactive"></div>
-            </div>
-        </form>
-        <div class="button-container">
-            <button class="btn" id="create-calendar">Create</button>
-        </div> -->
         <script src="../js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
