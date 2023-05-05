@@ -1,7 +1,12 @@
 function addActivity(activityName) {
-    return '<div class="list-group-item added"> <div class="activity-name">' + activityName + '</div></div>\n'
+    let activityStr =   '<div class="list-group-item added">\n' +
+                        '   <div class="activity-name">' + activityName + '</div>\n' +
+                        '   <button type="button" class="btn primary remove-btn remove-activity">Remove</button>\n' +
+                        '</div>'
+    return activityStr
 }
 
+//Checks if the Calendar Form has been filled out properly
 function checkFormValidity(event) {
     let calName = $(event).find("#cal-name").val();
     let numActivitiesSelected = $(event).find('#selected-activities').children().length;
@@ -10,12 +15,13 @@ function checkFormValidity(event) {
     //Checking for valid calendar name
     if(calName.length < 1 || calName.length > 254) {
         returnVal = false;
-        $(event).find()
+        // $(event).find() #Add Form Input Error Message
     }
 
     //Checking for valid number of activities selected
     if(numActivitiesSelected < 1) {
         returnVal = false;
+        // $(event).find() #Add Form Input Error Message
     }
 
     return returnVal;
@@ -46,18 +52,34 @@ function saveCalendarToStorage(event) {
 
 function loadCalendarsFromStorage() {
     chrome.storage.sync.get('calendars', function(data){
-        console.log(data.calendars)
-        console.log($('#calendar-container').length)
         if(data.calendars != undefined && $('#calendar-container').length) {
             let calArr = data.calendars
             let items = []
 
             calArr.forEach(cal => {
-                items.push('<div class="list-group-item">' + cal +'</div>')
+                items.push( '<div class="list-group-item added">\n' + 
+                            '   <div class="calendar-name">' + cal + '</div>\n' + 
+                            '   <button type="button" id="remove-calendar" class="btn primary remove-btn">Remove</button>\n' + 
+                            '</div>')
             });
 
             $(items.join('')).appendTo('#calendar-container')
         }
+    })
+}
+
+function removeCalendarFromStorage(calName) {
+    chrome.storage.sync.remove(calName, function() {
+        chrome.storage.sync.get('calendars', function(data){
+            let calArr = data.calendars
+
+            for(let i = 0; i < calArr.length; i++) {
+                //Check if two strings are equal
+                    //If they are splice array at this moment
+                    //Break
+            }
+            //Push new array to chrome storage
+        })
     })
 }
 
@@ -155,16 +177,26 @@ $(document).ready(function() {
 
     //Adding remove button to selected activities
     $(document).on('mouseenter', '#selected-activities > .list-group-item' , function() {
-        $('<button type="button" class="btn primary remove-btn">Remove</button>').appendTo($(this))
+        $(this).find('button').css('display', 'block')
     })
 
-    //Removing remove button to selected activities
+    //Removing remove button from selected activities
     $(document).on('mouseleave', '#selected-activities > .list-group-item' , function() {
-        $(this).children('button').remove()
+        $(this).find('button').css('display', 'none')
+    })
+
+    //Adding remove button to calendars
+    $(document).on('mouseenter', '#calendar-container > .list-group-item' , function() {
+        $(this).find('button').css('display', 'block')
+    })
+
+    //Removing remove button from calendars
+    $(document).on('mouseleave', '#calendar-container > .list-group-item' , function() {
+        $(this).find('button').css('display', 'none')
     })
 
     //Click event for remove button on selected activities
-    $(document).on('click', '.remove-btn', function() {
+    $(document).on('click', '.remove-activity', function() {
         let sibling = $(this).siblings()
         let parent = $(this).parent()
         
@@ -173,6 +205,14 @@ $(document).ready(function() {
         $(sibling).addClass('list-group-item searchable')
         $(sibling).appendTo($('.activity-container'))
         $(parent).remove()
+    })
+
+    //Click event for remove calendar activity
+    $(document).on('click', '#remove-calendar', function() {
+        let calName = $(this).siblings().text()
+
+        removeCalendarFromStorage(calName)
+        // $(this).parent().remove()
     })
 
     //Adds form submit validity checking

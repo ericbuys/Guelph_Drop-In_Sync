@@ -133,5 +133,6 @@ form.container {
 }
 
 .remove-btn {
+    display: none;
     max-height: 24px;
 }
