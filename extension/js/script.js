@@ -72,13 +72,13 @@ function removeCalendarFromStorage(calName) {
     chrome.storage.sync.remove(calName, function() {
         chrome.storage.sync.get('calendars', function(data){
             let calArr = data.calendars
-
-            for(let i = 0; i < calArr.length; i++) {
-                //Check if two strings are equal
-                    //If they are splice array at this moment
-                    //Break
+            let index = calArr.indexOf(calName)
+            
+            if(index > -1) {
+                calArr.splice(index, 1)
             }
-            //Push new array to chrome storage
+
+            chrome.storage.sync.set({'calendars': calArr})
         })
     })
 }
@@ -212,7 +212,7 @@ $(document).ready(function() {
         let calName = $(this).siblings().text()
 
         removeCalendarFromStorage(calName)
-        // $(this).parent().remove()
+        $(this).parent().remove()
     })
 
     //Adds form submit validity checking
