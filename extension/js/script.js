@@ -29,7 +29,7 @@ function checkFormValidity(event) {
 
 function saveCalendarToStorage(event) {
     let calName = $(event).find("#cal-name").val();
-    let calActivities = $(event).find('#selected-activities').children();
+    let calActivities = $(event).find('#selected-activities').find('.activity-name');
     let activityList = []
 
     calActivities.each(function() {
@@ -45,7 +45,7 @@ function saveCalendarToStorage(event) {
             }
             calendarList.push(calName)
 
-            chrome.storage.sync.set({'calendars': calendarList})
+            chrome.storage.sync.set({'calendars': calendarList}, updateOneCalendar(calName))
         });
     });
 }
@@ -84,7 +84,18 @@ function removeCalendarFromStorage(calName) {
 }
 
 function switchToIndex() {
-    window.location.href = '../html/index.html';
+//    window.location.href = '../html/index.html';
+}
+
+function updateOneCalendar(calName) {
+    chrome.storage.sync.get(calName, function(data){
+        let activityList = data[calName]
+        
+        chrome.runtime.sendMessage(data, function(response) {
+            console.log("script:" + response)
+        })
+
+    })
 }
 
 $(document).ready(function() {
