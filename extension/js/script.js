@@ -101,6 +101,7 @@ function updateOneCalendar(calName) {
 $(document).ready(function() {
     loadCalendarsFromStorage()
 
+    //Testing Method for clearing storage
     $('#clear-storage').click(function() {
         chrome.storage.sync.clear(function() {
             var error = chrome.runtime.lastError;
@@ -110,6 +111,13 @@ $(document).ready(function() {
                 console.log('storage cleared')
             }
         });
+    })
+
+    //Testing Fetch
+    $('#fetch').click(function() {
+        console.log("fetching")
+        const URL = "http://localhost:8000/heloooooo"
+        fetch(URL)
     })
 
     //Positions back & closer buttons appropriately
