@@ -1,5 +1,6 @@
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS#, cross_origin
+import json
 
 #RUN USING 'flask run -p 8000'
 
@@ -8,13 +9,14 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/')
-# @cross_origin()
 def hello():
     print("hello()")
     return 'hello from flask'
 
-@app.route('/heloooooo')
-# @cross_origin()
-def test():
-    print("hellooooooooooooooo")
-    return 'hellooooooooooooooo'
+@app.route('/add_activities', methods=['POST'])
+def handle_add_activities():
+    if request.method == 'POST':
+        data = request.json
+        print(data)
+
+        return json.dumps('POST requests handled successfully')
