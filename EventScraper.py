@@ -119,4 +119,4 @@ if __name__ == "__main__":
     scrapedEvents = scraper.scrapeURL()
     
     for event in scrapedEvents:
-        print(event)
+        print(event.__dict__)

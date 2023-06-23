@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS#, cross_origin
 import json
+import EventScraper
 
 #RUN USING 'flask run -p 8000'
 
@@ -16,7 +17,15 @@ def hello():
 @app.route('/add_activities', methods=['POST'])
 def handle_add_activities():
     if request.method == 'POST':
+        SCRAPING_URL = "https://fitandrec.gryphons.ca/sports-clubs/drop-in-rec"
         data = request.json
-        print(data)
+        activityList = []
 
-        return json.dumps('POST requests handled successfully')
+        for activity in data:
+            scraper = EventScraper.EventScraper(SCRAPING_URL, activity)
+            scrapedEvents = scraper.scrapeURL()
+
+            for event in scrapedEvents():
+                activityList.append(event.__dict__)
+
+        return json.dumps(activityList)
