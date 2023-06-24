@@ -2,6 +2,10 @@ from requests_html import HTMLSession
 from pyquery import PyQuery as pq
 from lxml import etree
 from datetime import datetime, timedelta
+from selenium import webdriver 
+from selenium.webdriver.chrome.service import Service as ChromeService 
+from webdriver_manager.chrome import ChromeDriverManager 
+from selenium.webdriver.common.by import By
 
 class Event:
     def __init__(self, eventName, startTime, endTime, location, day, dateRange):
@@ -54,9 +58,9 @@ class EventScraper:
     def __init__(self, url, targetEvent):
         self.url = url
         self.targetEvent = targetEvent
-        self.session = HTMLSession()
     
     def setupSession(self, retryAmount):
+        self.session = HTMLSession()
         count = 0
         pageNotLoaded = True
 
@@ -110,13 +114,35 @@ class EventScraper:
                         scrapedEvents.append(newEvent)
         
         return scrapedEvents
+    
+    def scrapeWithSelenium(self):
+        options = webdriver.ChromeOptions() 
+        options.add_argument("--headless=new")
+        # userAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.56 Safari/537.36"
+        # options.add_argument(f'user-agent={userAgent}')
+
+        with webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options) as driver: 
+            driver.get(self.url)
+            eventBlocks = driver.find_elements(By.XPATH, "//div[contains(@class, 'block day')]")
+
+            for eventBlock in eventBlocks:
+                events = eventBlock.find_elements(By.CLASS_NAME, 'event')
+
+                for event in events:
+                    eventName = event.find_element(By.CLASS_NAME, 'eventName')
+
+                    if(eventName.text == self.targetEvent):
+                        print(event.get_attribute('outerHTML'))
+                # print(eventBlock.get_attribute('outerHTML'))
 
 if __name__ == "__main__":
     URL = "https://fitandrec.gryphons.ca/sports-clubs/drop-in-rec"
     TARGET_EVENT = "Badminton"
 
     scraper = EventScraper(URL, TARGET_EVENT)
-    scrapedEvents = scraper.scrapeURL()
+    scrapedEvents = scraper.scrapeWithSelenium()
+
+    # scrapedEvents = scraper.scrapeURL()
     
-    for event in scrapedEvents:
-        print(event.__dict__)
+    # for event in scrapedEvents:
+    #     print(event.__dict__)
