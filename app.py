@@ -23,9 +23,9 @@ def handle_add_activities():
 
         for activity in data:
             scraper = EventScraper.EventScraper(SCRAPING_URL, activity)
-            scrapedEvents = scraper.scrapeWithSelenium()
+            scrapedEvents = scraper.scrapeURL()
 
-            # for event in scrapedEvents():
-            activityList.append("event.__dict__")
+            for event in scrapedEvents:
+                activityList.append(event.__dict__)
 
         return json.dumps(activityList)
