@@ -1,11 +1,8 @@
-from requests_html import HTMLSession
-from pyquery import PyQuery as pq
-from lxml import etree
-from datetime import datetime, timedelta
 from selenium import webdriver 
 from selenium.webdriver.chrome.service import Service as ChromeService 
 from webdriver_manager.chrome import ChromeDriverManager 
 from selenium.webdriver.common.by import By
+from datetime import datetime, timedelta
 
 class Event:
     def __init__(self, eventName, startTime, endTime, location, day, dateRange):
@@ -25,6 +22,10 @@ class Event:
     def parseTime(self, dateRange, startTime, endTime):
         calStartDate = datetime.strptime(dateRange, '%B %d')
         today = datetime.today()
+
+        #Converting Start and End times to lists 
+        startTime = startTime.split(" ")
+        endTime = endTime.split(" ")
 
         #Calculating the Event Start and End Time
         eventStartTime = datetime.strptime(startTime[0], '%H:%M')
@@ -55,94 +56,53 @@ class EventScraper:
         'day_7': 6
     }
 
-    def __init__(self, url, targetEvent):
+    def __init__(self, url, targetEvents):
         self.url = url
-        self.targetEvent = targetEvent
-    
-    def setupSession(self, retryAmount):
-        self.session = HTMLSession()
-        count = 0
-        pageNotLoaded = True
 
-        self.r = self.session.get(self.url)
-
-        while(count < retryAmount and pageNotLoaded):
-            self.r.html.render()
-            
-            try:
-                displayTable = self.r.html.find("#AllEvents")[0]
-                pageNotLoaded = False   
-            except:
-                pass
-            
-            count += 1
-
-        if pageNotLoaded:
-            print("Unable to load dynamic page content")
+        if type(targetEvents) is not list:
+            self.targetEvents = [targetEvents]
         else:
-            print("Dynamic Page Content loaded")
-        
-        return (not pageNotLoaded)
-            
+            self.targetEvents = targetEvents
+    
     def scrapeURL(self):
-        dynamicPageContentLoaded = self.setupSession(retryAmount=50)
         scrapedEvents = []
 
-        if dynamicPageContentLoaded:
-            displayTable = self.r.html.find("#AllEvents")[0]
-            eventBlocks = displayTable.find(".block.day")
+        #Running in headless mode (no browser)
+        options = webdriver.ChromeOptions() 
+        options.add_argument("--headless=new")
 
-            dateRange = self.r.html.find(".col-sm-3.col-md-5.col-xs-12")[0].text
+        with webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options) as driver: 
+            driver.get(self.url)
+            eventBlocks = driver.find_elements(By.XPATH, '//*[@id="AllEvents"]//div[contains(@class, "block day")]')
+            
+            #Getting the start date for the current week
+            dateRange = driver.find_element(By.XPATH, '//*[@id="EventsModule_1456"]/div[1]/form/div[1]/strong').text
             dateRange = dateRange.split(" ")
             dateRange = ' '.join(dateRange[2:4])
 
             for eventBlock in eventBlocks:
-                events = pq(etree.fromstring(eventBlock.html))
-                eventList = events('.event')
-                day = self.DAY_INDEX[eventBlock.attrs['class'][2]]
-
-                for event in eventList:
-                    event = pq(event)
-                    eventName = event('.eventName').text()
-
-                    if(self.targetEvent == eventName):
-                        eventLocation = event('.eventLocation').text()
-                        startTime = event('.startTime').text().split(' ')
-                        endTime = event('.endTime').text().split(' ')
-                        
-                        newEvent = Event(eventName, startTime, endTime, eventLocation, day, dateRange)
-                        scrapedEvents.append(newEvent)
-        
-        return scrapedEvents
-    
-    def scrapeWithSelenium(self):
-        options = webdriver.ChromeOptions() 
-        options.add_argument("--headless=new")
-        # userAgent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.56 Safari/537.36"
-        # options.add_argument(f'user-agent={userAgent}')
-
-        with webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options) as driver: 
-            driver.get(self.url)
-            eventBlocks = driver.find_elements(By.XPATH, "//div[contains(@class, 'block day')]")
-
-            for eventBlock in eventBlocks:
                 events = eventBlock.find_elements(By.CLASS_NAME, 'event')
+                eventDay = self.DAY_INDEX[eventBlock.get_attribute('class').split()[2]]
 
                 for event in events:
-                    eventName = event.find_element(By.CLASS_NAME, 'eventName')
+                    eventName = event.find_element(By.CLASS_NAME, 'eventName').text
 
-                    if(eventName.text == self.targetEvent):
-                        print(event.get_attribute('outerHTML'))
-                # print(eventBlock.get_attribute('outerHTML'))
+                    if(eventName in self.targetEvents):
+                        eventLocation = event.find_element(By.CLASS_NAME, 'eventLocation').text
+                        eventStartTime = event.find_element(By.CLASS_NAME, 'startTime').text
+                        eventEndTime = event.find_element(By.CLASS_NAME, 'endTime').text
+
+                        newEvent = Event(eventName, eventStartTime, eventEndTime, eventLocation, eventDay, dateRange)
+                        scrapedEvents.append(newEvent)
+
+        return scrapedEvents
 
 if __name__ == "__main__":
     URL = "https://fitandrec.gryphons.ca/sports-clubs/drop-in-rec"
     TARGET_EVENT = "Badminton"
 
     scraper = EventScraper(URL, TARGET_EVENT)
-    scrapedEvents = scraper.scrapeWithSelenium()
-
-    # scrapedEvents = scraper.scrapeURL()
+    scrapedEvents = scraper.scrapeURL()
     
-    # for event in scrapedEvents:
-    #     print(event.__dict__)
+    for event in scrapedEvents:
+        print(event.__dict__)
