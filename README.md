@@ -1,11 +1,19 @@
 # CalenderEventAdder
 
 ## Project Description
-This project aims to link your Google Calendar with the University of Guelphs Drop-In Recreation Calendar. Using a Google Chrome Extension, you can select certain activities offered at the Fitness Centre and have them automatically added to your Google Calendar. Also, this extension will keep your Google Calendar updated on a weekly basis, updating your Google Calendar every Sunday
+This project aims to link your Google Calendar with the University of Guelphs Drop-In Recreation Calendar. Using a Google Chrome Extension, you can select certain activities offered at the Fitness Centre and have them automatically added and updated to your Google Calendar. Also, this extension will keep your Google Calendar updated on a weekly basis, updating your Google Calendar every Sunday
 
 ## Languages & Technologies
 - Python, Javascript, HTML, CSS
 - Flask, jQuery, Bootstrap, Google Calendar API
+
+## To-Do
+- Chrome Extension shows loading icon in main menu until all events are added
+- Chrome Extension has a form error message when invalid input is entered
+- Chrome Extension search works properly for activities
+- Chrome Extension prompts for access to your Google Calendar on install
+- Chrome Extension automatically updates added calendars weekly
+- Host server on 3rd party service
 
 ## References
 * [Drop-In Rec Calendar](https://fitandrec.gryphons.ca/sports-clubs/drop-in-rec)

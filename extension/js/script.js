@@ -84,7 +84,7 @@ function removeCalendarFromStorage(calName) {
 }
 
 function switchToIndex() {
-//    window.location.href = '../html/index.html';
+   window.location.href = '../html/index.html';
 }
 
 function updateOneCalendar(calName) {
