@@ -5,7 +5,7 @@ This project aims to link your Google Calendar with the University of Guelphs Dr
 
 ## Languages & Technologies
 - Python, Javascript, HTML, CSS
-- Flask, jQuery, Bootstrap, Google Calendar API
+- Flask, Selenium, jQuery, Bootstrap, Google Calendar API
 
 ## To-Do
 - Chrome Extension shows loading icon in main menu until all events are added
