@@ -1,23 +1,108 @@
-chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
-    if(request.contentScriptQuery == "postActivitiesData") {
-        fetch(request.url, {
+const API_KEY = 'AIzaSyCwKCkgq-1GAJqxjVRRuvV9d5Gwj_JaXLk';
+const TIMEZONE = 'America/Toronto'
+
+function getCalendarID(calendarName, activities, createCalendarEvents) {
+    chrome.identity.getAuthToken({ interactive: true }, async function (token) {
+        let calendarListURL = "https://www.googleapis.com/calendar/v3/users/me/calendarList"
+        let calendarList_fetch_options = {
+            method: "GET",
+            async: true,
+            headers: {
+                Authorization: "Bearer " + token,
+                "Content-Type": "application/json",
+            },
+            contentType: "json",
+        };
+        let foundExisitingCalendarID = false;
+
+        await fetch(calendarListURL, calendarList_fetch_options)
+        .then(res => res.json())
+        .then(data => {
+            for(let i = 0; i < data['items'].length; i++) {
+                console.log(data['items'][i]['summary'])
+
+                if(data['items'][i]['summary'] == calendarName) {
+                    foundExisitingCalendarID = true;
+                    let calID = data['items'][i]['id']
+                    createCalendarEvents(calID, activities, token)
+                }
+            }
+        })
+
+        //CalendarID doesn't exist, make new calendar
+        if(foundExisitingCalendarID == false) {
+            let calendarsURL = 'https://www.googleapis.com/calendar/v3/calendars'
+            let calendarObject = {
+                summary: calendarName
+            }
+            let newCalendar_fetch_options = {
+                method: "POST",
+                async: true,
+                headers: {
+                    Authorization: "Bearer " + token,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(calendarObject)
+            }
+
+            await fetch(calendarsURL, newCalendar_fetch_options)
+            .then(res => res.json())
+            .then(data => {
+                calID = data['id']
+                createCalendarEvents(calID, activities, token)
+            })
+        }
+    });
+}
+
+async function createCalendarEvents(calID, activities, token) {
+    let insertEventURL = "https://www.googleapis.com/calendar/v3/calendars/" + calID + "/events"
+
+    for(let i = 0; i < activities.length; i++) {
+        let eventBody = {
+            "summary": activities[i]['eventName'],
+            "location": activities[i]['location'],
+            "start": {
+                'dateTime': activities[i]['startTime'],
+                'timeZone': TIMEZONE,
+            },
+            "end": {
+                'dateTime': activities[i]['endTime'],
+                'timeZone': TIMEZONE,
+            },
+        }
+
+        let newEvent_fetch_options = {
+            method: "POST",
+            async: true,
+            headers: {
+                Authorization: "Bearer " + token,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(eventBody)
+        }
+
+        await fetch(insertEventURL, newEvent_fetch_options)
+        .then(res => res.json())
+        .then(res => console.log(res))
+    }
+}
+
+chrome.runtime.onMessage.addListener( async function(request, sender, sendResponse) {
+    if(request.message == "postActivitiesData") {
+        fetch_options = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(request.activities)
-        }).then(response => {
-            if(response.status == 200) {
-                return response.json();
-            } else {
-                return "ERROR"
-            }
-        }).then(json => {
-            console.log(JSON.stringify(json))
-        }).then(res => {
-            sendResponse(res)
-        })
+        }
+
+        fetch(request.url, fetch_options)
+        .then(res => res.json())
+        .then(res => getCalendarID(request.calendarName, res, createCalendarEvents))
     }
 
     return true
 });
+

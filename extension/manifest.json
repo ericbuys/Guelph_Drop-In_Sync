@@ -3,16 +3,28 @@
     "version": "1.0",
     "description": "Syncs the Fit & Rec Drop-In Calendar by Activity with your Google Calendar",
     "author": "Eric Buys",
+    "manifest_version": 3,
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtHJLin9D9B886bRSnHvqetk3tbbMa4AkFsOfefqza4ZFYhSWuTD7mO1XEa6wxc67mU2YYpfyaRBXVSThGZX12oXs0YwIvQtQbq20X6coM8U15rNPllffqW5vd4ehwUVes6UmsFOGrvDymTN18k6utdDajidjSUJrrUFb2S6Fk9JxHhyjGthp9uzOQpr0oaYe/v/U2tQwsPfnCuTzCL8NHs+QKdtPDumbx0Imr158F5p1fEv8UaHYRwTGZKe0sjAYFLrtt59pBlx5J0MGD3QP4lG+MsAWjDfzK4eCgGk2b95qiMHzjKW0qeDY/mE80BpdZIDlIIAaNwXQfvI4upc+AQIDAQAB",
+    "oauth2": {
+        "client_id": "504537351045-rntjk2p9a9lejjq0t0fnuntcdr0e7k8m.apps.googleusercontent.com",
+        "scopes": [
+            "profile email",
+            "https://www.googleapis.com/auth/calendar"
+        ]
+    },
     "action":{
         "default_popup": "./html/index.html"
     },
     "permissions": [
         "storage",
         "nativeMessaging",
+        "identity",
+        "identity.email"
+    ],
+    "host_permissions": [
         "http://127.0.0.1:8000/*"
     ],
     "background": {
         "service_worker": "./js/background.js"
-    },
-    "manifest_version": 3
+    }
 }

@@ -93,9 +93,10 @@ function updateOneCalendar(calName) {
         
         chrome.runtime.sendMessage(
             {   
-                contentScriptQuery: "postActivitiesData",
+                message: "postActivitiesData",
                 url: "http://localhost:8000/add_activities",
-                activities: activityList,
+                calendarName: calName,
+                activities: activityList
             }, (response) => {
                 console.log('Response from script.js chrome.runtime.sendMessage()', response)
             }
@@ -117,33 +118,6 @@ $(document).ready(function() {
                 console.log('storage cleared')
             }
         });
-    })
-
-    //Testing Fetch
-    $('#fetch').click(function() {
-        console.log("fetching")
-        const URL = "http://localhost:8000/add_activities"
-        
-        const data = {
-            activities: 'Badminton'
-        };
-
-        fetch(URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-          })
-        //   .then(response => response.json())
-          .then(data => {
-            // Handle the response data
-            console.log(data);
-          })
-          .catch(error => {
-            // Handle any errors
-            console.error(error);
-          });
     })
 
     //Positions back & closer buttons appropriately
