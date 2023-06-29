@@ -90,6 +90,8 @@ async function createCalendarEvents(calID, activities, token) {
 
 chrome.runtime.onMessage.addListener( async function(request, sender, sendResponse) {
     if(request.message == "postActivitiesData") {
+        console.log('Recieved Message to create calendar')
+
         fetch_options = {
             method: 'POST',
             headers: {
@@ -103,6 +105,7 @@ chrome.runtime.onMessage.addListener( async function(request, sender, sendRespon
         .then(res => getCalendarID(request.calendarName, res, createCalendarEvents))
     }
 
-    return true
+    sendResponse('Success');
+    return true;
 });
 

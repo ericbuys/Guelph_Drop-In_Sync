@@ -8,6 +8,7 @@ This project aims to link your Google Calendar with the University of Guelphs Dr
 - Flask, Selenium, jQuery, Bootstrap, Google Calendar API
 
 ## To-Do
+- Chrome Extension has no errors appearing in the console (try catching properly)
 - Chrome Extension shows loading icon in main menu until all events are added
 - Chrome Extension has a form error message when invalid input is entered
 - Chrome Extension search works properly for activities

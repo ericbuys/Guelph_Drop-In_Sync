@@ -14,12 +14,14 @@ function checkFormValidity(event) {
 
     //Checking for valid calendar name
     if(calName.length < 1 || calName.length > 254) {
+        console.log('Invalid name selected')
         returnVal = false;
         // $(event).find() #Add Form Input Error Message
     }
 
     //Checking for valid number of activities selected
     if(numActivitiesSelected < 1) {
+        console.log('Invalid nnumber of activities selected')
         returnVal = false;
         // $(event).find() #Add Form Input Error Message
     }
@@ -28,6 +30,8 @@ function checkFormValidity(event) {
 }
 
 function saveCalendarToStorage(event) {
+    console.log('start of saveCalendarToStorage')
+
     let calName = $(event).find("#cal-name").val();
     let calActivities = $(event).find('#selected-activities').find('.activity-name');
     let activityList = []
@@ -88,6 +92,8 @@ function switchToIndex() {
 }
 
 function updateOneCalendar(calName) {
+    console.log('start of updateOneCalendar')
+
     chrome.storage.sync.get(calName, function(data){
         let activityList = data[calName]
         
@@ -99,6 +105,7 @@ function updateOneCalendar(calName) {
                 activities: activityList
             }, (response) => {
                 console.log('Response from script.js chrome.runtime.sendMessage()', response)
+                switchToIndex()
             }
         )
 
@@ -239,9 +246,13 @@ $(document).ready(function() {
         event.preventDefault()
         event.stopPropagation()
 
+        console.log('Form submitted')
+
         if(checkFormValidity(event.target)) {
+            console.log('Valid Form Submitted')
             saveCalendarToStorage(event.target)
-            switchToIndex()
+        } else {
+            console.log('Invalid Form Submitted')
         }
     })
 })
