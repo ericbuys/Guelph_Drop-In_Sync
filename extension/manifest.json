@@ -22,7 +22,7 @@
         "identity.email"
     ],
     "host_permissions": [
-        "http://127.0.0.1:8000/*"
+        "https://fitandrec.gryphons.ca/*"
     ],
     "background": {
         "service_worker": "./js/background.js"

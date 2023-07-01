@@ -1,5 +1,4 @@
 const API_KEY = 'AIzaSyCwKCkgq-1GAJqxjVRRuvV9d5Gwj_JaXLk';
-const TIMEZONE = 'America/Toronto'
 
 function getCalendarID(calendarName, activities, createCalendarEvents) {
     chrome.identity.getAuthToken({ interactive: true }, async function (token) {
@@ -60,15 +59,15 @@ async function createCalendarEvents(calID, activities, token) {
 
     for(let i = 0; i < activities.length; i++) {
         let eventBody = {
-            "summary": activities[i]['eventName'],
+            "summary": activities[i]['name'],
             "location": activities[i]['location'],
             "start": {
                 'dateTime': activities[i]['startTime'],
-                'timeZone': TIMEZONE,
+                'timeZone': activities[i]['timeZone'],
             },
             "end": {
                 'dateTime': activities[i]['endTime'],
-                'timeZone': TIMEZONE,
+                'timeZone': activities[i]['timeZone'],
             },
         }
 
@@ -88,21 +87,13 @@ async function createCalendarEvents(calID, activities, token) {
     }
 }
 
+
+
 chrome.runtime.onMessage.addListener( async function(request, sender, sendResponse) {
-    if(request.message == "postActivitiesData") {
+    console.log('In Message Listener')
+    if(request.message == "addToCalendar") {
         console.log('Recieved Message to create calendar')
-
-        fetch_options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(request.activities)
-        }
-
-        fetch(request.url, fetch_options)
-        .then(res => res.json())
-        .then(res => getCalendarID(request.calendarName, res, createCalendarEvents))
+        getCalendarID(request.calendarName, request.activities, createCalendarEvents)
     }
 
     sendResponse('Success');
