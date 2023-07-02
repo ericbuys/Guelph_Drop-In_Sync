@@ -14,16 +14,35 @@ function checkFormValidity(event) {
 
     //Checking for valid calendar name
     if(calName.length < 1 || calName.length > 254) {
-        console.log('Invalid name selected')
         returnVal = false;
-        // $(event).find() #Add Form Input Error Message
+        $("#cal-name").tooltip('enable')
+        $("#cal-name").addClass("invalid-input animate-invalid-input");
+
+        setTimeout(function () { 
+            $("#cal-name").removeClass('animate-invalid-input');
+        }, 1000);
+
+    } else {
+        $("#cal-name").tooltip('disable')
+        if($("#cal-name").hasClass('invalid-input')) {
+            $("#cal-name").toggleClass('invalid-input')
+        }
     }
 
     //Checking for valid number of activities selected
     if(numActivitiesSelected < 1) {
-        console.log('Invalid nnumber of activities selected')
         returnVal = false;
-        // $(event).find() #Add Form Input Error Message
+        $("#activities").tooltip('enable')
+        $("#activities").addClass("invalid-input animate-invalid-input");
+
+        setTimeout(function () { 
+            $("#activities").removeClass('animate-invalid-input');
+        }, 1000);
+    } else {
+        $("#activities").tooltip('disable')
+        if($("#activities").hasClass('invalid-input')) {
+            $("#activities").toggleClass('invalid-input')
+        }
     }
 
     return returnVal;
@@ -286,6 +305,19 @@ $(document).ready(function() {
 
     $("#create-calendar-form").click(function() {
         window.location.href = '../html/create_calendar.html';
+        $("#cal-name").tooltip(
+            {
+                animation: true,
+            }
+        );
+        $("#activities").tooltip(
+            { 
+                animation: true,
+            }
+        );
+
+        $("#cal-name").tooltip('disable');
+        $("#activities").tooltip('disable');
     });
 
     $(".btn-close.back-arrow").click(function() {

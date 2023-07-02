@@ -1,3 +1,17 @@
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
 :root {
     --uog-red: #c20430;
     --uog-red-dark: #b6052e;
@@ -6,7 +20,7 @@
     --back-arrow-size: 30px;
     /* --btn-colour: rgba(0, 0, 0, 0.562);
     --btn-colour-hover: rgba(0, 0, 0, 0.082); */
-}  
+}
 
 body {
     width: 400px;
@@ -136,3 +150,11 @@ form.container {
     display: none;
     max-height: 24px;
 }
+
+.invalid-input {
+    border:2px solid red;
+}
+
+.animate-invalid-input {
+    animation: shake 0.5s;
+}   

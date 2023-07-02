@@ -15,19 +15,19 @@
         <div class="container text-center title">
             <h1 class="title-text my-auto">Create New Calendar</h1>
         </div>
-        <form class="container needs-validation was-validated" novalidate>
+        <form class="container needs-validation was-validated" id="activity-form" novalidate>
             <div class="row form-row">
                 <div class="label-container col-3">
                     <label for="cal-name"><b>Name</b></label>
                 </div>
-                <input class="col-8" type="text" name="cal-name" id="cal-name" placeholder="Calendar Name">
+                <input class="col-8" type="text" name="cal-name" id="cal-name" placeholder="Calendar Name" autocomplete="off" data-toggle="tooltip" title="Invalid calendar name">
             </div>
             <div class="row form-row activities-row">
                 <div class="label-container col-3">
                     <label><b>Activities</b></label>
                 </div>
                 <div class="col-8 search-input">
-                    <input class="activity-container-search" type="text" id="activities" placeholder="Search">
+                    <input class="activity-container-search" type="text" id="activities" placeholder="Search" autocomplete="off" data-toggle="tooltip" title="Select atleast one activity">
                 </div>
             </div>
             <div class="row form-row activities-row">
