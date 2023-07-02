@@ -8,8 +8,6 @@ This project aims to link your Google Calendar with the University of Guelphs Dr
 - REST API, Bootstrap, Google Calendar API
 
 ## To-Do
-- Chrome Extension has a form error message when invalid input is entered
-- Chrome Extension search works properly for activities
 - Chrome Extension prompts for access to your Google Calendar on install
 - Chrome Extension automatically updates added calendars weekly
 
