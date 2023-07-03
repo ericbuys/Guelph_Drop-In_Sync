@@ -19,12 +19,15 @@
         "storage",
         "nativeMessaging",
         "identity",
-        "identity.email"
+        "identity.email",
+        "offscreen",
+        "tabs"
     ],
     "host_permissions": [
         "https://fitandrec.gryphons.ca/*"
     ],
     "background": {
-        "service_worker": "./js/background.js"
+        "service_worker": "./js/background.js",
+        "type": "module"
     }
 }
