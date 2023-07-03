@@ -5,11 +5,21 @@ This project aims to link your Google Calendar with the University of Guelphs Dr
 
 ## Languages & Technologies
 - Javascript, HTML, CSS
-- REST API, Bootstrap, Google Calendar API
+- Bootstrap, Google Calendar API, jQuery, REST API
 
 ## To-Do
 - Chrome Extension prompts for access to your Google Calendar on install
 - Chrome Extension automatically updates added calendars weekly
+    - Gets calendars from chrome storage
+- Page for customizing selected activities
+    - Colour of event
+    - Colour for calendar
+    - Time
+    - Add custom event to search for
+- Overview/Edit/Delete Option in main menu
+    - Overview lets you see what activities are added and how many (saved to chrome storage)
+    - Delete has option to delete from Google Calendar aswell
+- List of possible options grows by automatic scraping
 
 ## References
 * [Drop-In Rec Calendar](https://fitandrec.gryphons.ca/sports-clubs/drop-in-rec)
