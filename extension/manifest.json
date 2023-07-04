@@ -20,8 +20,7 @@
         "nativeMessaging",
         "identity",
         "identity.email",
-        "offscreen",
-        "tabs"
+        "offscreen"
     ],
     "host_permissions": [
         "https://fitandrec.gryphons.ca/*"
