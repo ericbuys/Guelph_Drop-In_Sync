@@ -71,6 +71,7 @@ function saveCalendarToStorage(event) {
             chrome.storage.sync.set({'calendars': calendarList}, function() {
                 chrome.runtime.sendMessage(
                     {   
+                        target: 'background',
                         message: "addToCalendar",
                         calendarName: calName,
                         activities: activityList
@@ -79,7 +80,6 @@ function saveCalendarToStorage(event) {
                         // switchToIndex()
                     }
                 )
-                //updateOneCalendar(calName)
             })
         });
     });
@@ -134,17 +134,9 @@ function updateOneCalendar(calName) {
 $(document).ready(function() {
     loadCalendarsFromStorage()
 
-    //Testing Method for clearing storage
-    $('#clear-storage').click(function() {
-        chrome.storage.sync.clear(function() {
-            let error = chrome.runtime.lastError;
-            if (error) {
-                console.error(error);
-            } else {
-                console.log('storage cleared')
-            }
-        });
-    })
+    // $('#fetch').click(async function() {
+    //     console.log(await scrapeEvents(['Badminton', 'Squash'], 0, 'test-calendar'))
+    // })
 
     //Positions back & closer buttons appropriately
     $('.btn-close').css('translate', function() {
