@@ -11,6 +11,7 @@ This project aims to link your Google Calendar with the University of Guelphs Dr
 - Chrome Extension prompts for access to your Google Calendar on install
 - Chrome Extension automatically updates added calendars weekly
     - Gets calendars from chrome storage
+- Loading screen once you create a calendar
 - Page for customizing selected activities
     - Colour of event
     - Colour for calendar

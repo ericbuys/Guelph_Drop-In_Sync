@@ -49,8 +49,6 @@ function checkFormValidity(event) {
 }
 
 function saveCalendarToStorage(event) {
-    console.log('start of saveCalendarToStorage')
-
     let calName = $(event).find("#cal-name").val();
     let calActivities = $(event).find('#selected-activities').find('.activity-name');
     let activityList = []
@@ -73,11 +71,11 @@ function saveCalendarToStorage(event) {
                     {   
                         target: 'background',
                         message: "addToCalendar",
-                        calendarName: calName,
-                        activities: activityList
+                        calendarName: [calName],
+                        activities: [activityList]
                     }, function(response) {
                         console.log('Response from script.js chrome.runtime.sendMessage()', response)
-                        // switchToIndex()
+                        switchToIndex()
                     }
                 )
             })
@@ -122,21 +120,16 @@ function switchToIndex() {
    window.location.href = '../html/index.html';
 }
 
-function updateOneCalendar(calName) {
-    console.log('start of updateOneCalendar')
-
-    chrome.storage.sync.get(calName, function(data){
-        let activityList = data[calName]
-        scrapeEvents(activityList, 0, calName)
-    })
-}
-
 $(document).ready(function() {
     loadCalendarsFromStorage()
 
-    // $('#fetch').click(async function() {
-    //     console.log(await scrapeEvents(['Badminton', 'Squash'], 0, 'test-calendar'))
-    // })
+    $('#fetch').click(function() {
+        console.log('sending message')
+        chrome.runtime.sendMessage({
+            message: 'testForAlarm',
+            target: 'background'
+        }, result => console.log('in script.js', result))
+    })
 
     //Positions back & closer buttons appropriately
     $('.btn-close').css('translate', function() {
@@ -270,13 +263,8 @@ $(document).ready(function() {
         event.preventDefault()
         event.stopPropagation()
 
-        console.log('Form submitted')
-
         if(checkFormValidity(event.target)) {
-            console.log('Valid Form Submitted')
             saveCalendarToStorage(event.target)
-        } else {
-            console.log('Invalid Form Submitted')
         }
     })
 })

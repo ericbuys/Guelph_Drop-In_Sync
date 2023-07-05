@@ -17,10 +17,9 @@
     },
     "permissions": [
         "storage",
-        "nativeMessaging",
         "identity",
-        "identity.email",
-        "offscreen"
+        "offscreen",
+        "alarms"
     ],
     "host_permissions": [
         "https://fitandrec.gryphons.ca/*"

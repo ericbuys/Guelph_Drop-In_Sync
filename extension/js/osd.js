@@ -67,7 +67,7 @@ function getEventTimes(startTime, endTime, day) {
 }
 
 //Scrape events from FitndRec site
-async function scrapeEvents(activities, numWeeksForward, calName) {
+async function scrapeEvents(activityLists, numWeeksForward) {
     console.log('about to fetch')
         
     const url = "https://fitandrec.gryphons.ca/REST/Event/getEventsWeekView"
@@ -100,47 +100,52 @@ async function scrapeEvents(activities, numWeeksForward, calName) {
     .then((html) => {
         let page = new DOMParser().parseFromString(html['html'], "text/html")
 
-        //Creating Search String for retrieving all matching events
-        let searchString = "//div[contains(@class, 'eventName')";
-        for(let i = 0; i < activities.length; i++) {
-            if(i < 1) {
-                searchString += ' and ('
+        //Iterate over calendars & activities from Lists
+        for(const activities of activityLists) {
+            const eventListSingle = []
+
+            //Creating Search String for retrieving all matching events
+            let searchString = "//div[contains(@class, 'eventName')";
+            for(let i = 0; i < activities.length; i++) {
+                if(i < 1) {
+                    searchString += ' and ('
+                }
+
+                searchString += 'contains(text(), "' + activities[i] + '")'
+
+                if(i < activities.length - 1 && activities.length != 1) {
+                    searchString += ' or '
+                }
+
+            }
+            searchString += ')]'
+
+            //Finding additional event information
+            let events = page.evaluate(searchString, page, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null)
+            let node = null
+
+            //Iterating through all events found
+            while (node = events.iterateNext()) {
+                const eventName = node.innerHTML.trim()
+                const eventLocation = node.parentElement.querySelector('.eventLocation').innerHTML.trim()
+                const eventStartTime = node.parentElement.querySelector('.startTime').innerHTML.trim()
+                const eventEndTime = node.parentElement.querySelector('.endTime').innerHTML.trim()
+                const eventDay = node.parentElement.closest('.block.day').classList[2]
+                const eventTimes = getEventTimes(eventStartTime, eventEndTime, eventDay)
+
+                const eventObj = {
+                    name: eventName,
+                    location: eventLocation,
+                    startTime: eventTimes['start'],
+                    endTime: eventTimes['end'],
+                    timeZone: 'America/Toronto'
+                }
+                eventListSingle.push(eventObj)
             }
 
-            searchString += 'contains(text(), "' + activities[i] + '")'
-
-            if(i < activities.length - 1 && activities.length != 1) {
-                searchString += ' or '
-            }
-
+            eventList.push(eventListSingle)
         }
-        searchString += ')]'
-
-        //Finding additional event information
-        let events = page.evaluate(searchString, page, null, XPathResult.UNORDERED_NODE_ITERATOR_TYPE, null)
-        let node = null
-
-        //Iterating through all events found
-        while (node = events.iterateNext()) {
-            const eventName = node.innerHTML.trim()
-            const eventLocation = node.parentElement.querySelector('.eventLocation').innerHTML.trim()
-            const eventStartTime = node.parentElement.querySelector('.startTime').innerHTML.trim()
-            const eventEndTime = node.parentElement.querySelector('.endTime').innerHTML.trim()
-            const eventDay = node.parentElement.closest('.block.day').classList[2]
-            const eventTimes = getEventTimes(eventStartTime, eventEndTime, eventDay)
-
-            const eventObj = {
-                name: eventName,
-                location: eventLocation,
-                startTime: eventTimes['start'],
-                endTime: eventTimes['end'],
-                timeZone: 'America/Toronto'
-            }
-            eventList.push(eventObj)
-        }
-
-        //await getCalendarID(calName, eventList, createCalendarEvents)
-
+       
         return eventList
 
     })
@@ -154,9 +159,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return
     }
 
-    scrapeEvents(request.activities, 0, request.calendarName).then((result) => {
-        // Send the response with the result to the popup script
-        sendResponse({ result: result });
+    scrapeEvents(request.activitiesList, 0).then((result) => {
+        sendResponse(result);
     });
     return true;
 })
