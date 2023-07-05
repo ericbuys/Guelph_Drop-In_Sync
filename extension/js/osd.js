@@ -66,6 +66,14 @@ function getEventTimes(startTime, endTime, day) {
     }
 }
 
+//Compare function for sorting events by start date
+function compareStartDates(obj1, obj2) {
+    let timeOne = new Date(obj1.startTime)
+    let timeTwo = new Date(obj2.startTime)
+
+    return timeOne - timeTwo
+}
+
 //Scrape events from FitndRec site
 async function scrapeEvents(activityLists, numWeeksForward) {
     console.log('about to fetch')
@@ -142,7 +150,8 @@ async function scrapeEvents(activityLists, numWeeksForward) {
                 }
                 eventListSingle.push(eventObj)
             }
-
+            
+            eventListSingle.sort(compareStartDates)
             eventList.push(eventListSingle)
         }
        
