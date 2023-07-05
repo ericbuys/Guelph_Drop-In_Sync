@@ -8,9 +8,10 @@ This project aims to link your Google Calendar with the University of Guelphs Dr
 - Bootstrap, Google Calendar API, jQuery, REST API
 
 ## To-Do
+- Chrome Extension automatically updates added calendars (FINISH ALARMS PART)
+    - Alarm
+    - Check for duplicate activity
 - Chrome Extension prompts for access to your Google Calendar on install
-- Chrome Extension automatically updates added calendars weekly
-    - Gets calendars from chrome storage
 - Loading screen once you create a calendar
 - Page for customizing selected activities
     - Colour of event

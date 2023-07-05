@@ -1,4 +1,4 @@
-import { getCalendarID, createCalendarEvents } from "./calendar.js";
+import { addToCalendar } from "./calendar.js";
 
 const updateCalendarAlarmName = 'updateCalendar'
 
@@ -59,12 +59,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         offscreenScrapeEvents(request.calendarName, request.activities)
         .then((result) => {
             console.log('Result in background message listener', result)
-            getCalendarID(request.calendarName, result[0], createCalendarEvents)
+            addToCalendar(request.calendarName, result)
             sendResponse('result')
         });
 
         return true;
     } else if(request.message == 'testForAlarm') {
+        //MOVE THIS TO ALARMS
         chrome.storage.sync.get(['calendars'])
         .then(result => {
             let calendarList = result.calendars
@@ -86,8 +87,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 offscreenScrapeEvents(calendarList, activityList)
                 .then((result) => {
                     console.log('Result in background message listener', result)
-                    checkForDuplicateActivities()
-                    // getCalendarID(request.calendarName, result[0], createCalendarEvents)
+                    addToCalendar(calendarList, result)
                     sendResponse('result')
                 });
             })
