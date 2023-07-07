@@ -3,7 +3,7 @@ import { addToCalendar } from "./calendar.js";
 const updateCalendarAlarmName = 'updateCalendar'
 
 //This function creates a offscreen document so that the background script can do webscraping
-function offscreenScrapeEvents(calendarNamesList, activitiesList) { 
+function offscreenScrapeEvents(activitiesList) { 
     return new Promise(async (resolve, reject) => {
         await chrome.offscreen.createDocument({
             url: '../html/osd.html',
@@ -56,7 +56,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if(request.message == "addToCalendar") {
         console.log('Request recieved to scrape events from onMessage listener')
 
-        offscreenScrapeEvents(request.calendarName, request.activities)
+        offscreenScrapeEvents(request.activities)
         .then((result) => {
             console.log('Result in background message listener', result)
             addToCalendar(request.calendarName, result)
@@ -84,7 +84,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 })
             })
             .then(() => {
-                offscreenScrapeEvents(calendarList, activityList)
+                offscreenScrapeEvents(activityList)
                 .then((result) => {
                     console.log('Result in background message listener', result)
                     addToCalendar(calendarList, result)
@@ -105,13 +105,37 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     if(alarm.name == updateCalendarAlarmName) {
         console.log('alarm went off')
 
-        chrome.storage.sync.get('calendars')
-        .then(calendarList => {
-            for(let i = 0; i < calendarList.length; i++) {
-                console.log(calendarList[i])
-                chrome.storage.sync.get(calendarList[i])
-                .then(result => console.log(result))
+        chrome.storage.sync.get(['calendars'])
+        .then(result => {
+            let calendarList = result.calendars
+            let activityList = []
+
+            if(calendarList == undefined) {
+                return
             }
+
+            new Promise((resolve, reject) => {
+                calendarList.forEach((calendar, index, calendarList) => {
+                    chrome.storage.sync.get([calendar])
+                    .then(result => {
+                        activityList.push(result[calendar])
+
+                        if(index === calendarList.length - 1) {
+                            resolve()
+                        }
+                    })
+                })
+            })
+            .then(() => {
+                offscreenScrapeEvents(activityList)
+                .then((result) => {
+                    console.log('Result in alarm message listener', result)
+                    addToCalendar(calendarList, result)
+                });
+            })
+        })
+        .catch(error => {
+            console.log(error)
         })
     }
 })

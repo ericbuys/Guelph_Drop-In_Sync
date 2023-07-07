@@ -1,14 +1,14 @@
 //Create start and end date for fetching fit and rec activities
 function getFetchDate(numWeeksForward) {
     const dt = new Date()
-    dt.setDate(dt.getDate() + (numWeeksForward * 7))
+    dt.setDate(dt.getDate())
 
     const currentDay = dt.getDay()
     const startDate = new Date()
     const endDate = new Date()
 
     startDate.setDate(dt.getDate() - currentDay)
-    endDate.setDate(dt.getDate() - currentDay + 6)
+    endDate.setDate(dt.getDate() - currentDay + 6 + (numWeeksForward * 7))
 
     let dateObj = {
         start: startDate.getFullYear() + '-' + (startDate.getMonth() + 1) + '-' + startDate.getDate(),
@@ -48,14 +48,16 @@ function getEventTimes(startTime, endTime, day) {
     endDate.setDate(dt.getDate() + DAY_INDEX[day] - dt.getDay())
 
     //Clearing Seconds for Event
+    startDate.setMilliseconds(0)
     startDate.setSeconds(0)
+    endDate.setMilliseconds(0)
     endDate.setSeconds(0)
 
-    // //Setting Start Time
+    //Setting Start Time
     startDate.setHours(parseInt(startTime[0]) + ((startClockSide == 'AM') ? 0 : 12))
     startDate.setMinutes(startTime[1])
 
-    // //Setting End Time
+    //Setting End Time
     endDate.setHours(parseInt(endTime[0]) + ((endClockSide == 'AM') ? 0 : 12))
     endDate.setMinutes(endTime[1])
 
@@ -151,6 +153,7 @@ async function scrapeEvents(activityLists, numWeeksForward) {
             }
             
             eventListSingle.sort(compareStartDates)
+            console.log(eventListSingle)
             eventList.push(eventListSingle)
         }
        
