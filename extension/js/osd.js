@@ -76,9 +76,7 @@ function compareStartDates(obj1, obj2) {
 }
 
 //Scrape events from FitndRec site
-async function scrapeEvents(activityLists, numWeeksForward) {
-    console.log('about to fetch')
-        
+async function scrapeEvents(activityLists, numWeeksForward) {   
     const url = "https://fitandrec.gryphons.ca/REST/Event/getEventsWeekView"
     let fetchDate = getFetchDate(numWeeksForward)
     let options = {
@@ -153,7 +151,6 @@ async function scrapeEvents(activityLists, numWeeksForward) {
             }
             
             eventListSingle.sort(compareStartDates)
-            console.log(eventListSingle)
             eventList.push(eventListSingle)
         }
        
@@ -165,6 +162,7 @@ async function scrapeEvents(activityLists, numWeeksForward) {
     });
 }
 
+// Message Listener for scraping
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if(request.target !== 'offscreen') {
         return

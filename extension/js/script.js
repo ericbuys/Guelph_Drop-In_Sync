@@ -1,3 +1,4 @@
+// Returns html for activities added to activities selected list
 function addActivity(activityName) {
     let activityStr =   '<div class="list-group-item added">\n' +
                         '   <div class="activity-name">' + activityName + '</div>\n' +
@@ -48,6 +49,7 @@ function checkFormValidity(event) {
     return returnVal;
 }
 
+//Saves the calendar created to chrome storage
 function saveCalendarToStorage(event) {
     let calName = $(event).find("#cal-name").val();
     let calActivities = $(event).find('#selected-activities').find('.activity-name');
@@ -73,16 +75,13 @@ function saveCalendarToStorage(event) {
                         message: "addToCalendar",
                         calendarName: [calName],
                         activities: [activityList]
-                    }, function(response) {
-                        console.log('Response from script.js chrome.runtime.sendMessage()', response)
-                        switchToIndex()
-                    }
-                )
+                    }, () => switchToIndex())
             })
         });
     });
 }
 
+//Loading the calendars added to the front page
 function loadCalendarsFromStorage() {
     chrome.storage.sync.get('calendars', function(data){
         if(data.calendars != undefined && $('#calendar-container').length) {
@@ -101,6 +100,7 @@ function loadCalendarsFromStorage() {
     })
 }
 
+//Removes a calendars information from storage
 function removeCalendarFromStorage(calName) {
     chrome.storage.sync.remove(calName, function() {
         chrome.storage.sync.get('calendars', function(data){
@@ -122,14 +122,6 @@ function switchToIndex() {
 
 $(document).ready(function() {
     loadCalendarsFromStorage()
-
-    $('#fetch').click(function() {
-        console.log('sending message')
-        chrome.runtime.sendMessage({
-            message: 'testForAlarm',
-            target: 'background'
-        }, result => console.log('in script.js', result))
-    })
 
     //Positions back & closer buttons appropriately
     $('.btn-close').css('translate', function() {
@@ -193,7 +185,7 @@ $(document).ready(function() {
         });
     }
 
-    //Hiding/showing activity list
+    // Hiding/showing activity list
     $(document).on("click", function (event) {
         let opened = $('.activity-container').hasClass('show')
         let clickLoc = $(event.target)
@@ -203,7 +195,7 @@ $(document).ready(function() {
         }
     });
 
-    //Searching activity list
+    // Searching activity list
     $(document).on("keyup", '#activities' ,function() {
         let value = $(this).val().toLowerCase();
         $(".activity-container div").filter(function() {
@@ -211,34 +203,34 @@ $(document).ready(function() {
         });
     });
 
-    //Adding new activity to selected activities list
+    // Adding new activity to selected activities list
     $(document).on('click', '.list-group-item.searchable', function() {
         let newActivity = addActivity($(this).text())
         $(newActivity).appendTo("#selected-activities")
         $(this).remove()
     })
 
-    //Adding remove button to selected activities
+    // Adding remove button to selected activities
     $(document).on('mouseenter', '#selected-activities > .list-group-item' , function() {
         $(this).find('button').css('display', 'block')
     })
 
-    //Removing remove button from selected activities
+    // Removing remove button from selected activities
     $(document).on('mouseleave', '#selected-activities > .list-group-item' , function() {
         $(this).find('button').css('display', 'none')
     })
 
-    //Adding remove button to calendars
+    // Adding remove button to calendars
     $(document).on('mouseenter', '#calendar-container > .list-group-item' , function() {
         $(this).find('button').css('display', 'block')
     })
 
-    //Removing remove button from calendars
+    // Removing remove button from calendars
     $(document).on('mouseleave', '#calendar-container > .list-group-item' , function() {
         $(this).find('button').css('display', 'none')
     })
 
-    //Click event for remove button on selected activities
+    // Click event for remove button on selected activities
     $(document).on('click', '.remove-activity', function() {
         let sibling = $(this).siblings()
         let parent = $(this).parent()
@@ -250,7 +242,7 @@ $(document).ready(function() {
         $(parent).remove()
     })
 
-    //Click event for remove calendar activity
+    // Click event for remove calendar activity
     $(document).on('click', '#remove-calendar', function() {
         let calName = $(this).siblings().text()
 
@@ -258,7 +250,7 @@ $(document).ready(function() {
         $(this).parent().remove()
     })
 
-    //Adds form submit validity checking
+    // Adds form submit validity checking
     $('.needs-validation').on('submit', function(event) {
         event.preventDefault()
         event.stopPropagation()

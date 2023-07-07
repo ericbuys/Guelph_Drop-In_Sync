@@ -1,13 +1,9 @@
-// const API_KEY = 'AIzaSyCwKCkgq-1GAJqxjVRRuvV9d5Gwj_JaXLk';
-
+// Adds the events to their respective calendar
 async function addToCalendar(calendarList, activityList) {
-    console.log('In calendar.js')
-
     let authToken = await chrome.identity.getAuthToken({ interactive: true })
     let index = 0;
 
     for await(const calendar of calendarList) {
-        console.log(index)
         let calID = await getCalendarID(authToken.token, calendar)
         await addEventsToCalendar(authToken.token, calID, activityList[index])
         index++
@@ -164,9 +160,7 @@ async function addEventsToCalendar(token, calID, eventsToAdd) {
 
             await fetch(eventsURL, newEvent_fetch_options)
             .then(res => res.json())
-            .then(res => console.log(res))
         }
-        
     }
 }
 
