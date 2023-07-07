@@ -4,7 +4,6 @@ function getFetchDate(numWeeksForward) {
     dt.setDate(dt.getDate() + (numWeeksForward * 7))
 
     const currentDay = dt.getDay()
-
     const startDate = new Date()
     const endDate = new Date()
 

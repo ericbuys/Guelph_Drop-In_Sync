@@ -1,3 +1,5 @@
+// const API_KEY = 'AIzaSyCwKCkgq-1GAJqxjVRRuvV9d5Gwj_JaXLk';
+
 async function addToCalendar(calendarList, activityList) {
     console.log('In calendar.js')
 
@@ -58,16 +60,42 @@ async function getCalendarID(token, calendarName) {
     })
 }
 
-function compareStartDates(obj1, obj2) {
-    let timeOne = new Date(obj1.start.dateTime)
-    let timeTwo = new Date(obj2.start.dateTime)
+//Create start and end date for fetching events from calendar
+function getFetchDate(numWeeksForward) {
+    const dt = new Date()
+    dt.setDate(dt.getDate() + (numWeeksForward * 7))
 
-    return timeOne - timeTwo
+    const currentDay = dt.getDay()
+    const startDate = new Date()
+    const endDate = new Date()
+
+    startDate.setDate(dt.getDate() - currentDay)
+    endDate.setDate(dt.getDate() - currentDay + 6)
+
+    startDate.setSeconds(0)
+    startDate.setMinutes(0)
+    startDate.setHours(0)
+
+    endDate.setSeconds(59)
+    endDate.setMinutes(59)
+    endDate.setHours(23)
+
+    let dateObj = {
+        startISO: startDate.toISOString(),
+        // endISO: '2023-07-03T03:59:59.842Z'
+        endISO: endDate.toISOString()
+    }
+    
+    return dateObj
 }
 
 //This function adds events to your google calendar
 async function addEventsToCalendar(token, calID, activities) {
+    let fetchDate = getFetchDate(0)
     let eventsURL = "https://www.googleapis.com/calendar/v3/calendars/" + calID + "/events"
+    eventsURL += '?orderBy=startTime&singleEvents=true'
+    eventsURL += '&timeMin=' + fetchDate.startISO
+    eventsURL += '&timeMax=' + fetchDate.endISO
 
     let eventList_fetch_options = {
         method: "GET",
@@ -76,10 +104,9 @@ async function addEventsToCalendar(token, calID, activities) {
             Authorization: "Bearer " + token,
             "Content-Type": "application/json",
         }
-        // orderBy: 'startTime',
-        // singleEvents: true
     }
-
+    
+    console.log(getFetchDate(0))
     let events = await fetch(eventsURL, eventList_fetch_options)
     .then(res => res.json())
     .then(res => {
@@ -89,9 +116,6 @@ async function addEventsToCalendar(token, calID, activities) {
 
         console.log(eventList)
         console.log('pre')
-        eventList.forEach(elm => console.log(elm.start.dateTime))
-        eventList.sort(compareStartDates)
-        console.log('post')
         eventList.forEach(elm => console.log(elm.start.dateTime))
 
         return eventList
