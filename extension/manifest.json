@@ -1,10 +1,10 @@
 {
     "name": "Guelph Drop-In Sync",
     "version": "1.0",
-    "description": "Syncs the the University of Guelph's Drop-In Recreation Calendar with your Google Calendar",
+    "description": "UoG Fitness Centre x Google Calendar",
     "author": "Eric Buys",
     "manifest_version": 3,
-    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtHJLin9D9B886bRSnHvqetk3tbbMa4AkFsOfefqza4ZFYhSWuTD7mO1XEa6wxc67mU2YYpfyaRBXVSThGZX12oXs0YwIvQtQbq20X6coM8U15rNPllffqW5vd4ehwUVes6UmsFOGrvDymTN18k6utdDajidjSUJrrUFb2S6Fk9JxHhyjGthp9uzOQpr0oaYe/v/U2tQwsPfnCuTzCL8NHs+QKdtPDumbx0Imr158F5p1fEv8UaHYRwTGZKe0sjAYFLrtt59pBlx5J0MGD3QP4lG+MsAWjDfzK4eCgGk2b95qiMHzjKW0qeDY/mE80BpdZIDlIIAaNwXQfvI4upc+AQIDAQAB",
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgQgpYxUI6rvJYn7WLeDbyRaeBwpYn39Sqqw4xcMqDEQJBUJfGdwACZpprQBpGhgXVPC0ghYY6NWr5DPDflKnJSONbOPluPhbLhxwfWo9j7hPYh+thbBy9cMbZOvO/Ba5sTHseUj2w2AL4eUFo24mRZalveb9GXAMO5egrCrqW/3v0f3h+IABo77JPZyoBX+wFfGgrmKa2POzzCqygKMboDDCumPH2zzvIml1UZGk4TGIaZjhvxQLydd2VPH6CPqP22MjdwBu1QbONX5C0jxWiqT+LCUfrum6TbWfb52aFRVYRVxd6LnRdu35WC2otnmkkquU/tCJt5iPDOtJAtDCJwIDAQAB",
     "oauth2": {
         "client_id": "504537351045-rntjk2p9a9lejjq0t0fnuntcdr0e7k8m.apps.googleusercontent.com",
         "scopes": [
