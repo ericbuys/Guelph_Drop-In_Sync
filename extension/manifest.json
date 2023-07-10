@@ -1,6 +1,6 @@
 {
     "name": "Guelph Drop-In Sync",
-    "version": "1.0",
+    "version": "1.0.1",
     "description": "UoG Fitness Centre x Google Calendar",
     "author": "Eric Buys",
     "manifest_version": 3,
