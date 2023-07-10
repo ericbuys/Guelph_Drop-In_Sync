@@ -1,12 +1,16 @@
 // Adds the events to their respective calendar
 async function addToCalendar(calendarList, activityList) {
-    let authToken = await chrome.identity.getAuthToken({ interactive: true })
-    let index = 0;
-
-    for await(const calendar of calendarList) {
-        let calID = await getCalendarID(authToken.token, calendar)
-        await addEventsToCalendar(authToken.token, calID, activityList[index])
-        index++
+    try {
+        let authToken = await chrome.identity.getAuthToken({ interactive: true })
+        let index = 0;
+        for await(const calendar of calendarList) {
+            let calID = await getCalendarID(authToken.token, calendar)
+            await addEventsToCalendar(authToken.token, calID, activityList[index])
+            index++
+        }
+    }
+    catch {
+        console.log('Error: User access not given')
     }
 }
 
