@@ -4,7 +4,7 @@ async function addToCalendar(calendarList, activityList) {
         let authToken = await chrome.identity.getAuthToken({ interactive: true })
         let index = 0;
         for await(const calendar of calendarList) {
-            let calID = await getCalendarID(authToken.token, calendar)
+            let calID = await getCalendarID(authToken.token, calendar, true)
             await addEventsToCalendar(authToken.token, calID, activityList[index])
             index++
         }
@@ -14,10 +14,44 @@ async function addToCalendar(calendarList, activityList) {
     }
 }
 
+// Removes a calendar for the users google calendar
+async function removeCalendar(calendarName) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let authToken = await chrome.identity.getAuthToken({ interactive: true })
+            let calID = await getCalendarID(authToken.token, calendarName, false)
+    
+            if(calID == null) {
+                return
+            }
+        
+            let fetchURL = "https://www.googleapis.com/calendar/v3/users/me/calendarList/" + calID
+            let fetchOptions = {
+                method: "DELETE",
+                async: true,
+                headers: {
+                    Authorization: "Bearer " + authToken.token,
+                    "Content-Type": "application/json",
+                },
+            };
+            let response = await fetch(fetchURL, fetchOptions)
+            
+            if(response.ok == true) {
+                resolve('Removed Calendar')
+            } else {
+                reject('Could not remove calendar')
+            }
+
+        } catch (e) {
+            console.log(e)
+        }
+    })
+}
+
 /* This function checks to see if a calendar has already been created and retrieves its ID
  * If the calendar has not been created yet, it creates a new calendar
  */
-async function getCalendarID(token, calendarName) {
+async function getCalendarID(token, calendarName, createNewCalendar) {
     let calendarListURL = "https://www.googleapis.com/calendar/v3/users/me/calendarList"
     let calendarList_fetch_options = {
         method: "GET",
@@ -40,6 +74,10 @@ async function getCalendarID(token, calendarName) {
         }
 
         //No Exisisting calID found
+        if(!createNewCalendar) {
+            return null
+        }
+
         let calendarsURL = 'https://www.googleapis.com/calendar/v3/calendars'
         let calendarObject = {
             summary: calendarName,
@@ -168,4 +206,4 @@ async function addEventsToCalendar(token, calID, eventsToAdd) {
     }
 }
 
-export { addToCalendar }
+export { addToCalendar, removeCalendar }

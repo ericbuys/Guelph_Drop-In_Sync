@@ -1,4 +1,4 @@
-import { addToCalendar } from "./calendar.js";
+import { addToCalendar, removeCalendar } from "./calendar.js";
 
 const updateCalendarAlarmName = 'updateCalendar'
 
@@ -58,7 +58,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         });
 
         return true;
-    } 
+    } else if (request.message == "removeCalendar") {
+        removeCalendar(request.calendarName)
+        .then(result => sendResponse(result))
+        return true
+    }
 });
 
 //Alarm Listener

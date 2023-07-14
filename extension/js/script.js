@@ -101,17 +101,23 @@ function loadCalendarsFromStorage() {
 }
 
 //Removes a calendars information from storage
-function removeCalendarFromStorage(calName) {
-    chrome.storage.sync.remove(calName, function() {
-        chrome.storage.sync.get('calendars', function(data){
-            let calArr = data.calendars
-            let index = calArr.indexOf(calName)
-            
-            if(index > -1) {
-                calArr.splice(index, 1)
-            }
-
-            chrome.storage.sync.set({'calendars': calArr})
+function removeCalendar(calName) {
+    chrome.runtime.sendMessage({
+        target: 'background',
+        message: 'removeCalendar',
+        calendarName: calName
+    }, () => {
+        chrome.storage.sync.remove(calName, function() {
+            chrome.storage.sync.get('calendars', function(data){
+                let calArr = data.calendars
+                let index = calArr.indexOf(calName)
+                
+                if(index > -1) {
+                    calArr.splice(index, 1)
+                }
+    
+                chrome.storage.sync.set({'calendars': calArr})
+            }) 
         })
     })
 }
@@ -242,11 +248,11 @@ $(document).ready(function() {
         $(parent).remove()
     })
 
-    // Click event for remove calendar activity
+    // Click event for remove calendar
     $(document).on('click', '#remove-calendar', function() {
         let calName = $(this).siblings().text()
 
-        removeCalendarFromStorage(calName)
+        removeCalendar(calName)
         $(this).parent().remove()
     })
 
