@@ -23,7 +23,6 @@ This Google Chrome Extension allows you to link your Google Calendar with the Un
     - Add custom event to search for
 - Overview/Edit/Delete Option in main menu
     - Overview lets you see what activities are added and how many (saved to chrome storage)
-    - Delete has option to delete from Google Calendar aswell
 - List of possible options grows by automatic scraping
 
 ## References

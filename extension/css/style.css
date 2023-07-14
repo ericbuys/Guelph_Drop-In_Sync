@@ -23,10 +23,19 @@
 }
 
 body {
-    width: 400px;
+    width: 100%;
+}
+
+.logo {
+    width: 30px;
+    height: 30px;
+    margin-left: 5px;
 }
 
 .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background-color: var(--uog-yellow);
 }
 
@@ -40,11 +49,6 @@ body {
     width: var(--back-arrow-size);
     height: var(--back-arrow-size);
     left: 0;
-}
-
-.btn-close {
-    position:absolute;
-    right: 0;
 }
 
 .btn.primary {
