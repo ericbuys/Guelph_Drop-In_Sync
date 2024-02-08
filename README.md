@@ -5,9 +5,9 @@
 This Google Chrome Extension allows you to link your Google Calendar with the University of Guelph's Drop-In Recreation Calendar. You have the abilitiy to create/delete calendars which will sync to your Google account. Upon creating a calendar, you can select the calendar name that will appear on your Google Calendar as well as the activities you want it to sync to your calendar. It will keep your Google Calendar up to date in perpituity as long as the activities are being offered that week in the Fitness Center.
 
 ## Screenshots
-![Main Menu](https://github.com/ericbuys/Guelph_Drop-In_Sync/blob/main/screenshots/main_menu.jpg)  
-![Create Calendar](https://github.com/ericbuys/Guelph_Drop-In_Sync/blob/main/screenshots/create_calendar.png)  
-![Google Calendar](https://github.com/ericbuys/Guelph_Drop-In_Sync/blob/main/screenshots/google_calendar.jpg)
+<img src="./screenshots/main_menu.jpg" alt="Main menu for Extension"/>
+<img src="./screenshots/create_calendar.jpg" alt="Creating a calendar"/>
+<img src="./screenshots/google_calendar.jpg" alt="Viewing a Google Calendar"/>
 
 ## Languages & Technologies
 - Javascript, HTML, CSS
