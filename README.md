@@ -6,8 +6,7 @@ This Google Chrome Extension allows you to link your Google Calendar with the Un
 
 ## Screenshots
 ![Main Menu](https://github.com/ericbuys/Guelph_Drop-In_Sync/blob/main/screenshots/main_menu.jpg)  
-![Create Calendar](https://github.com/ericbuys/Guelph_Drop-In_Sync/blob/main/screenshots/create_c
-alendar.png)  
+![Create Calendar](https://github.com/ericbuys/Guelph_Drop-In_Sync/blob/main/screenshots/create_calendar.png)  
 ![Google Calendar](https://github.com/ericbuys/Guelph_Drop-In_Sync/blob/main/screenshots/google_calendar.jpg)
 
 ## Languages & Technologies
